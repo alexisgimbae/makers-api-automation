@@ -5,7 +5,7 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch:    # Permite ejecución manual
+  workflow_dispatch:
 
 jobs:
   newman-tests:
@@ -20,6 +20,14 @@ jobs:
         with:
           node-version: '18'
 
+      - name: List files to verify
+        run: |
+          echo "=== Archivos en el repositorio ==="
+          ls -la
+          echo ""
+          echo "=== Archivos JSON encontrados ==="
+          ls -la *.json
+
       - name: Install Newman
         run: npm install -g newman newman-reporter-htmlextra
 
@@ -28,8 +36,10 @@ jobs:
 
       - name: Run Newman tests
         run: |
-          newman run "New Collection.postman_collection.json" \
-            -e "qa_environment.postman_environment.json" \
+          # IMPORTANTE: Usar comillas dobles porque el nombre tiene espacios
+          # y usar "./" para indicar que está en la raíz
+          newman run "./New Collection.postman_collection.json" \
+            -e "./qa_environment.postman_environment.json" \
             -r htmlextra \
             --reporter-htmlextra-export "reports/newman-report.html" \
             --reporter-htmlextra-title "API Test Report" \
