@@ -20,26 +20,27 @@ jobs:
         with:
           node-version: '18'
 
-      - name: List files to verify
-        run: |
-          echo "=== Archivos en el repositorio ==="
-          ls -la
-          echo ""
-          echo "=== Archivos JSON encontrados ==="
-          ls -la *.json
-
       - name: Install Newman
         run: npm install -g newman newman-reporter-htmlextra
 
       - name: Create reports directory
         run: mkdir -p reports
 
+      - name: Verify files exist
+        run: |
+          echo "=== Verificando archivos ==="
+          ls -la "New Collection.postman_collection.json"
+          ls -la "qa_enviroment.postman_environment.json"
+          echo "✅ Archivos encontrados!"
+
       - name: Run Newman tests
         run: |
-          # IMPORTANTE: Usar comillas dobles porque el nombre tiene espacios
-          # y usar "./" para indicar que está en la raíz
-          newman run "./New Collection.postman_collection.json" \
-            -e "./qa_enviroment.postman_environment.json" \
+          # NOMBRES EXACTOS de tus archivos:
+          # Collection: New Collection.postman_collection.json
+          # Environment: qa_enviroment.postman_environment.json (sin "n" en environment)
+          
+          newman run "New Collection.postman_collection.json" \
+            -e "qa_enviroment.postman_environment.json" \
             -r htmlextra \
             --reporter-htmlextra-export "reports/newman-report.html" \
             --reporter-htmlextra-title "API Test Report" \
