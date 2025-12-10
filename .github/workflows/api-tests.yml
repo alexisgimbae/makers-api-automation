@@ -39,7 +39,7 @@ jobs:
           # IMPORTANTE: Usar comillas dobles porque el nombre tiene espacios
           # y usar "./" para indicar que está en la raíz
           newman run "./New Collection.postman_collection.json" \
-            -e "./qa_environment.postman_environment.json" \
+            -e "./qa_enviroment.postman_environment.json" \
             -r htmlextra \
             --reporter-htmlextra-export "reports/newman-report.html" \
             --reporter-htmlextra-title "API Test Report" \
