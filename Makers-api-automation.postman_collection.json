@@ -1,0 +1,117 @@
+{
+	"info": {
+		"_postman_id": "1b2af03c-10c4-4572-9592-9057c8e981c8",
+		"name": "Makers-api-automation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37803239"
+	},
+	"item": [
+		{
+			"name": "TC_001: REGISTRO - REGISTRAR NOMBRE Y TIPO DE TRABAJO",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"TC_001: Status Code == 200 \", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"TC_002: Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"const responseData = pm.response.json();",
+							"console.info(responseData.json.name);",
+							"pm.environment.set(\"current_user_name\", responseData.json.name);",
+							"pm.environment.set(\"current_user_job\", responseData.json.job);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Test User\",\n    \"job\": \"Automation Engineer\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}{{domain}}{{path}}",
+					"host": [
+						"{{protocol}}{{domain}}{{path}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC_002: REGISTRO - OBTENER NOMBRE Y TIPO DE TRABAJO",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"TC_001: Status Code == 200 \", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"TC_002: Response time is less than 2000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"TC_003: Validate job == Automation Engineer\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var job = jsonData.args.job;\r",
+							"    pm.expect(job[0]).to.eql(\"Automation Engineer\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"TC_003: Validate Username == Test User\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var username = jsonData.args.name;\r",
+							"    pm.expect(username[0]).to.eql(\"Test User\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{protocol}}{{domain}}/get?name={{current_user_name}}&job={{current_user_job}}",
+					"host": [
+						"{{protocol}}{{domain}}"
+					],
+					"path": [
+						"get"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{current_user_name}}"
+						},
+						{
+							"key": "job",
+							"value": "{{current_user_job}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
