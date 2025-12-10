@@ -10,7 +10,6 @@ on:
 jobs:
   api-tests:
     runs-on: ubuntu-latest
-    name: Run API Tests with Newman
     
     steps:
       - name: 📥 Checkout code
@@ -21,28 +20,37 @@ jobs:
         with:
           node-version: '18'
           
-      - name: 📦 Install dependencies
-        run: |
-          npm install -g newman 
-          npm install -g newman-reporter-htmlextra
+      - name: 📦 Install Newman
+        run: npm install -g newman newman-reporter-htmlextra
           
-      - name: 🧪 Run API tests
+      - name: 🧪 Run Newman tests with explicit report path
         run: |
-          echo "🚀 Iniciando pruebas API..."
-          echo "Colección: NewCollection.postman_collection.json"
-          echo "Entorno: qa_enviroment.postman_environment.json"
+          echo "=== EJECUTANDO PRUEBAS ==="
+          # Crear carpeta para reportes
+          mkdir -p reports
           
+          # Ejecutar y guardar reporte en carpeta específica
           newman run NewCollection.postman_collection.json \
             -e qa_enviroment.postman_environment.json \
             -r htmlextra,cli \
-            --reporter-htmlextra-export "newman-report-$(date +%Y%m%d-%H%M%S).html" \
-            --reporter-htmlextra-title "Reporte de Pruebas API" \
+            --reporter-htmlextra-export "reports/api-test-report.html" \
+            --reporter-htmlextra-title "API Test Report - $(date '+%Y-%m-%d %H:%M')" \
             --reporter-htmlextra-darkTheme \
-            --reporter-htmlextra-showOnlyFails
-            
-      - name: 📤 Upload test report
+            --verbose
+          
+          # Verificar si se creó el reporte
+          echo "=== VERIFICANDO REPORTE ==="
+          ls -la reports/
+
+      - name: 📊 Upload HTML report
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: api-test-report
-          path: "newman-report-*.html"
+          path: reports/api-test-report.html
+          
+      - name: 📋 Show summary
+        run: |
+          echo "=== RESUMEN DE EJECUCIÓN ==="
+          echo "✅ Pruebas completadas exitosamente"
+          echo "📁 Reporte guardado en: reports/api-test-report.html"
