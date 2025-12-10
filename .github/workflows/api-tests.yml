@@ -1,54 +1,48 @@
-name: API Tests with Newman
+name: Postman API Tests
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
-  newman-tests:
+  api-tests:
     runs-on: ubuntu-latest
+    name: Run API Tests with Newman
     
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
+        
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: '18'
-
-      - name: Install Newman
-        run: npm install -g newman newman-reporter-htmlextra
-
-      - name: Create reports directory
-        run: mkdir -p reports
-
-      - name: Verify files exist
-        run: |
-          echo "=== Verificando archivos ==="
-          ls -la "New Collection.postman_collection.json"
-          ls -la "qa_enviroment.postman_environment.json"
-          echo "✅ Archivos encontrados!"
-
-      - name: Run Newman tests
-        run: |
-          # NOMBRES EXACTOS de tus archivos:
-          # Collection: New Collection.postman_collection.json
-          # Environment: qa_enviroment.postman_environment.json (sin "n" en environment)
           
-          newman run "NewCollection.postman_collection" \
-            -e "qa_enviroment.postman_environment" \
-            -r htmlextra \
-            --reporter-htmlextra-export "reports/newman-report.html" \
-            --reporter-htmlextra-title "API Test Report" \
-            --reporter-htmlextra-darkTheme
-
-      - name: Upload HTML report
+      - name: 📦 Install dependencies
+        run: |
+          npm install -g newman 
+          npm install -g newman-reporter-htmlextra
+          
+      - name: 🧪 Run API tests
+        run: |
+          echo "🚀 Iniciando pruebas API..."
+          echo "Colección: NewCollection.postman_collection.json"
+          echo "Entorno: qa_enviroment.postman_environment.json"
+          
+          newman run NewCollection.postman_collection.json \
+            -e qa_enviroment.postman_environment.json \
+            -r htmlextra,cli \
+            --reporter-htmlextra-export "newman-report-$(date +%Y%m%d-%H%M%S).html" \
+            --reporter-htmlextra-title "Reporte de Pruebas API" \
+            --reporter-htmlextra-darkTheme \
+            --reporter-htmlextra-showOnlyFails
+            
+      - name: 📤 Upload test report
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: newman-html-report
-          path: reports/newman-report.html
+          name: api-test-report
+          path: "newman-report-*.html"
