@@ -41,18 +41,15 @@ Sistema de pruebas automatizadas para APIs que ejecuta colecciones de Postman me
 **Archivos principales:**
 - `.github/workflows/api-tests.yml` → Pipeline de GitHub Actions
 - `NewCollection.postman_collection.json` → Colección de pruebas Postman
+- `qa_enviroment.postman_environment.json` → variables de colección
 - `README.md` → Esta documentación
 
 
 ## 🧪 Casos de Prueba
 | ID | Descripción | Método | Endpoint | Validaciones |
 |----|-------------|--------|----------|--------------|
-| TC_001 | Registrar nombre del cliente | POST | /post | Nombre + Status 200 |
-| TC_002 | Registrar nombre del padre | POST | /post | Nombre del padre |
-| TC_003 | Registrar nombre de la madre | POST | /post | Nombre de la madre |
-| TC_004 | Registrar nombre de mascota | POST | /post | Nombre de mascota |
-| TC_005 | Registrar celular del cliente | POST | /post | Número de celular |
-
+| TC_001 | REGISTRO - REGISTRAR NOMBRE Y TIPO DE TRABAJO | POST | /post | Status 200 |
+| TC_002 | REGISTRO - OBTENER NOMBRE Y TIPO DE TRABAJO| GET | /get | Status 200|
 ## ⚙️ Configuración
 
 ### 🔧 Instalación de Dependencias
