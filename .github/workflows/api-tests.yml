@@ -39,8 +39,8 @@ jobs:
           # Collection: New Collection.postman_collection.json
           # Environment: qa_enviroment.postman_environment.json (sin "n" en environment)
           
-          newman run "New Collection.postman_collection.json" \
-            -e "qa_enviroment.postman_environment.json" \
+          newman run "NewCollection.postman_collection" \
+            -e "qa_enviroment.postman_environment" \
             -r htmlextra \
             --reporter-htmlextra-export "reports/newman-report.html" \
             --reporter-htmlextra-title "API Test Report" \
